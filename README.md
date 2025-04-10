@@ -1,2 +1,2 @@
 # BankingSystem
-A project build for Banking System App in CS 431
+A project build for Banking System App in CS431
