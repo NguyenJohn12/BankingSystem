@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CSUEB Bank - Accounts</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h2>CSUEB Bank - Accounts</h2>
+  </header>
+
+  <nav class="navbar">
+    <a href="main.html">Home</a>
+    <a href="customers.html">Customers</a>
+    <a href="accounts.html" class="active">Accounts</a>
+    <a href="transactions.html">Transactions</a>
+    <a href="securities.html">Securities</a>
+    <a href="relationships.html">Relationships</a>
+    <a href="history.html">History</a>
+    <a href="index.html">Logout</a>
+  </nav>
+
+  <div class="content">
+    <h3>Account Records</h3>
+    <!-- Main Account Table -->
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Account_ID</th>
+          <th>Customer_ID</th>
+          <th>Account_Status</th>
+          <th>Account_type</th>
+          <th>Account_number</th>
+          <th>Balance</th>
+          <th>Open_date</th>
+          <th>min_balance</th>
+          <th>overdraft_balance</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td colspan="9" style="text-align: center;">No records found.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Credit_Account Table -->
+    <h4>Credit Accounts</h4>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Account_ID</th>
+          <th>Credit_limit</th>
+          <th>Due_date</th>
+          <th>Payment_percent</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td colspan="4" style="text-align: center;">No records found.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Debit_Account Table -->
+    <h4>Debit Accounts</h4>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Account_ID</th>
+          <th>Daily_withdrawal_limit</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td colspan="2" style="text-align: center;">No records found.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Investment_Account Table -->
+    <h4>Investment Accounts</h4>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Account_ID</th>
+          <th>risk_level</th>
+          <th>Strategy</th>
+          <th>Percent_return</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td colspan="4" style="text-align: center;">No records found.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 CSUEB Bank. All rights reserved.</p>
+  </footer>
+
+  <script src="main.js"></script>
+</body>
+</html>

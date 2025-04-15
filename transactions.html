@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CSUEB Bank - Transactions</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h2>CSUEB Bank - Transactions</h2>
+  </header>
+
+  <nav class="navbar">
+    <a href="main.html">Home</a>
+    <a href="customers.html">Customers</a>
+    <a href="accounts.html">Accounts</a>
+    <a href="transactions.html" class="active">Transactions</a>
+    <a href="securities.html">Securities</a>
+    <a href="relationships.html">Relationships</a>
+    <a href="history.html">History</a>
+    <a href="index.html">Logout</a>
+  </nav>
+
+  <div class="content">
+    <h3>Transaction Records</h3>
+    <!-- Main Transaction Table -->
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Transaction_ID</th>
+          <th>Account_ID</th>
+          <th>Transaction_type</th>
+          <th>Total</th>
+          <th>Description</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td colspan="6" style="text-align: center;">No records found.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Check Transactions -->
+    <h4>Check Transactions</h4>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Transaction_ID</th>
+          <th>Check_number</th>
+          <th>Check_date</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td colspan="3" style="text-align: center;">No records found.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Withdrawal Transactions -->
+    <h4>Withdrawal Transactions</h4>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Transaction_ID</th>
+          <th>Withdrawal_way</th>
+          <th>Withdrawal_location</th>
+          <th>ATM_code</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td colspan="4" style="text-align: center;">No records found.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Deposit Transactions -->
+    <h4>Deposit Transactions</h4>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Transaction_ID</th>
+          <th>Deposit_way</th>
+          <th>Deposit_location</th>
+          <th>Sender_place</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td colspan="4" style="text-align: center;">No records found.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Transaction Details -->
+    <h4>Transaction Details</h4>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Transaction_ID</th>
+          <th>Detail_ID</th>
+          <th>Detail_type</th>
+          <th>Detail_value</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td colspan="4" style="text-align: center;">No records found.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 CSUEB Bank. All rights reserved.</p>
+  </footer>
+
+  <script src="main.js"></script>
+</body>
+</html>
