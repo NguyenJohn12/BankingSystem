@@ -1,0 +1,101 @@
+<%- include("partials/header.ejs") %>
+
+<div class="content">
+  <h3>Customer Relationship Records</h3>
+  
+  <% if (typeof error !== 'undefined' && error) { %>
+    <div class="error-message"><%= error %></div>
+  <% } %>
+  
+  <% if (typeof success !== 'undefined' && success) { %>
+    <div class="success-message"><%= success %></div>
+  <% } %>
+
+  <!-- Add Relationship Form -->
+  <div class="form-container">
+    <h4>Create New Relationship</h4>
+    <form id="relationshipForm">
+      <div class="form-group">
+        <label for="relationshipType">Relationship Type</label>
+        <select id="relationshipType" name="relationshipType" required>
+          <option value="">Select Type</option>
+          <option value="Family">Family</option>
+          <option value="Business">Business</option>
+          <option value="Financial Advisor">Financial Advisor</option>
+          <option value="Trustee">Trustee</option>
+          <option value="Power of Attorney">Power of Attorney</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="balanceAmount">Balance Amount (if applicable)</label>
+        <input type="number" id="balanceAmount" name="balanceAmount" step="0.01" min="0">
+      </div>
+      <button type="submit" class="btn">Create Relationship</button>
+    </form>
+  </div>
+
+  <!-- Relationship Table -->
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Relationship_ID</th>
+        <th>Customer_ID</th>
+        <th>Relationship_Type</th>
+        <th>Balance_Amount</th>
+        <th>Balance_Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (typeof relationships !== 'undefined' && relationships.length > 0) { %>
+        <% relationships.forEach(function(relationship) { %>
+          <tr>
+            <td><%= relationship.relationship_id %></td>
+            <td><%= relationship.customer_id %></td>
+            <td><%= relationship.relationship_type %></td>
+            <td><%= relationship.balance_amount ? '$' + parseFloat(relationship.balance_amount).toFixed(2) : 'N/A' %></td>
+            <td><%= relationship.balance_date ? new Date(relationship.balance_date).toLocaleDateString() : 'N/A' %></td>
+          </tr>
+        <% }) %>
+      <% } else { %>
+        <tr>
+          <td colspan="5" style="text-align: center;">No records found.</td>
+        </tr>
+      <% } %>
+    </tbody>
+  </table>
+</div>
+
+<%- include("partials/footer.ejs") %>
+
+<script>
+  document.getElementById('relationshipForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const formData = {
+      relationshipType: document.getElementById('relationshipType').value,
+      balanceAmount: document.getElementById('balanceAmount').value || 0
+    };
+    
+    try {
+      const response = await fetch('/api/relationships', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      });
+      
+      const result = await response.json();
+      
+      if (result.success) {
+        alert('Relationship created successfully!');
+        window.location.reload();
+      } else {
+        alert('Error creating relationship: ' + result.error);
+      }
+    } catch (err) {
+      alert('Error submitting form: ' + err);
+    }
+  });
+</script>

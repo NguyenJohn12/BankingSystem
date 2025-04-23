@@ -1,0 +1,44 @@
+<%- include("partials/header.ejs") %>
+
+<div class="content">
+  <h3>Customer Records</h3>
+  
+  <% if (typeof error !== 'undefined' && error) { %>
+    <div class="error-message"><%= error %></div>
+  <% } %>
+  
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Customer_ID</th>
+        <th>Fname</th>
+        <th>Lname</th>
+        <th>Address</th>
+        <th>Phone</th>
+        <th>Email</th>
+        <th>BirthDate</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (typeof customers !== 'undefined' && customers.length > 0) { %>
+        <% customers.forEach(function(customer) { %>
+          <tr>
+            <td><%= customer.customer_id %></td>
+            <td><%= customer.fname %></td>
+            <td><%= customer.lname %></td>
+            <td><%= customer.address || 'N/A' %></td>
+            <td><%= customer.phone || 'N/A' %></td>
+            <td><%= customer.email %></td>
+            <td><%= customer.birthdate ? new Date(customer.birthdate).toLocaleDateString() : 'N/A' %></td>
+          </tr>
+        <% }) %>
+      <% } else { %>
+        <tr>
+          <td colspan="7" style="text-align: center;">No records found.</td>
+        </tr>
+      <% } %>
+    </tbody>
+  </table>
+</div>
+
+<%- include("partials/footer.ejs") %>

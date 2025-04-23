@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CSUEB Bank - <%= typeof pageTitle !== 'undefined' ? pageTitle : 'Dashboard' %></title>
+  <link rel="stylesheet" href="/styles/style.css">
+  <script src="/index.js"></script>
+</head>
+<body>
+  <header>
+    <h2>CSUEB Bank - <%= typeof pageTitle !== 'undefined' ? pageTitle : 'Welcome' %></h2>
+  </header>
+
+  <nav class="navbar">
+    <a href="/main">Home</a>
+    <a href="/customers">Customers</a>
+    <a href="/accounts">Accounts</a>
+    <a href="/transactions">Transactions</a>
+    <a href="/securities">Securities</a>
+    <a href="/relationships">Relationships</a>
+    <a href="/history">History</a>
+    <a href="/logout">Logout</a>
+  </nav>
+
+  <script src="/main.js"></script>
+</body>
+</html>

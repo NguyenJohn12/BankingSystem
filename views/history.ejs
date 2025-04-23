@@ -1,0 +1,68 @@
+<%- include("partials/header.ejs") %>
+
+<div class="content">
+  <h3>Transaction History</h3>
+  
+  <% if (typeof error !== 'undefined' && error) { %>
+    <div class="error-message"><%= error %></div>
+  <% } %>
+  
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Transaction_ID</th>
+        <th>Account_ID</th>
+        <th>Previous_balance</th>
+        <th>New_balance</th>
+        <th>History_ID</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (typeof transactionHistory !== 'undefined' && transactionHistory.length > 0) { %>
+        <% transactionHistory.forEach(function(history) { %>
+          <tr>
+            <td><%= history.transaction_id %></td>
+            <td><%= history.account_id %></td>
+            <td>$<%= parseFloat(history.previous_balance).toFixed(2) %></td>
+            <td>$<%= parseFloat(history.new_balance).toFixed(2) %></td>
+            <td><%= history.history_id %></td>
+          </tr>
+        <% }) %>
+      <% } else { %>
+        <tr>
+          <td colspan="5" style="text-align: center;">No records found.</td>
+        </tr>
+      <% } %>
+    </tbody>
+  </table>
+
+  <h3>Account Balance History</h3>
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Account_ID</th>
+        <th>Balance_history_ID</th>
+        <th>Balance_Amount</th>
+        <th>Balance_Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (typeof balanceHistory !== 'undefined' && balanceHistory.length > 0) { %>
+        <% balanceHistory.forEach(function(balance) { %>
+          <tr>
+            <td><%= balance.account_id %></td>
+            <td><%= balance.balance_history_id %></td>
+            <td>$<%= parseFloat(balance.balance_amount).toFixed(2) %></td>
+            <td><%= balance.balance_date ? new Date(balance.balance_date).toLocaleString() : 'N/A' %></td>
+          </tr>
+        <% }) %>
+      <% } else { %>
+        <tr>
+          <td colspan="4" style="text-align: center;">No records found.</td>
+        </tr>
+      <% } %>
+    </tbody>
+  </table>
+</div>
+
+<%- include("partials/footer.ejs") %>

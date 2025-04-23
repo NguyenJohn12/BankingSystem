@@ -1,0 +1,103 @@
+<%- include("partials/header.ejs") %>
+
+<div class="content">
+  <h2>Welcome to Your Dashboard</h2>
+  
+  <% if (typeof error !== 'undefined' && error) { %>
+    <div class="error-message"><%= error %></div>
+  <% } %>
+
+  <% if (typeof customer !== 'undefined' && customer) { %>
+    <div class="customer-info">
+      <h3>Customer Information</h3>
+      <p><strong>Name:</strong> <%= customer.fname %> <%= customer.lname %></p>
+      <p><strong>Email:</strong> <%= customer.email %></p>
+      <% if (customer.phone) { %>
+        <p><strong>Phone:</strong> <%= customer.phone %></p>
+      <% } %>
+    </div>
+  <% } %>
+
+  <h3>Your Accounts</h3>
+  <div class="accounts-container">
+    <% if (typeof accounts !== 'undefined' && accounts.length > 0) { %>
+      <% accounts.forEach(function(account) { %>
+        <div class="card">
+          <h3><%= account.account_type.charAt(0).toUpperCase() + account.account_type.slice(1) %> Account</h3>
+          <div class="card-body">
+            <p><strong>Account #:</strong> <%= account.account_number %></p>
+            <p><strong>Balance:</strong> $<%= parseFloat(account.balance).toFixed(2) %></p>
+            <p><strong>Status:</strong> <%= account.account_status %></p>
+            <a class="btn" href="/accounts">Manage Account</a>
+          </div>
+        </div>
+      <% }) %>
+    <% } else { %>
+      <div class="no-accounts">
+        <p>You don't have any accounts yet.</p>
+        <p>Contact customer service to open a new account.</p>
+      </div>
+    <% } %>
+  </div>
+
+  <h3>Recent Transactions</h3>
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Account</th>
+        <th>Type</th>
+        <th>Amount</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (typeof transactions !== 'undefined' && transactions.length > 0) { %>
+        <% transactions.forEach(function(transaction) { %>
+          <tr>
+            <td><%= transaction.transaction_date ? new Date(transaction.transaction_date).toLocaleDateString() : 'N/A' %></td>
+            <td><%= transaction.account_id %></td>
+            <td><%= transaction.transaction_type %></td>
+            <td>$<%= parseFloat(transaction.total).toFixed(2) %></td>
+            <td><%= transaction.description || 'N/A' %></td>
+          </tr>
+        <% }) %>
+      <% } else { %>
+        <tr>
+          <td colspan="5" style="text-align: center;">No recent transactions.</td>
+        </tr>
+      <% } %>
+    </tbody>
+  </table>
+  
+  <div class="quick-links">
+    <h3>Quick Links</h3>
+    <div class="cards-container">
+      <div class="card">
+        <h4>Transactions</h4>
+        <div class="card-body">
+          <p>View details of all your transactions.</p>
+          <a class="btn" href="/transactions">View Transactions</a>
+        </div>
+      </div>
+      
+      <div class="card">
+        <h4>Investment Portfolio</h4>
+        <div class="card-body">
+          <p>Track your investments and returns.</p>
+          <a class="btn" href="/securities">View Securities</a>
+        </div>
+      </div>
+      
+      <div class="card">
+        <h4>Account History</h4>
+        <div class="card-body">
+          <p>View your account balance history.</p>
+          <a class="btn" href="/history">View History</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include("partials/footer.ejs") %>

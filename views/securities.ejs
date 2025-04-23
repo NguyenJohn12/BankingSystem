@@ -1,0 +1,164 @@
+<%- include("partials/header.ejs") %>
+
+<div class="content">
+  <h3>Security Records</h3>
+  
+  <% if (typeof error !== 'undefined' && error) { %>
+    <div class="error-message"><%= error %></div>
+  <% } %>
+  
+  <% if (typeof success !== 'undefined' && success) { %>
+    <div class="success-message"><%= success %></div>
+  <% } %>
+
+  <!-- Form to Add/Update Security -->
+  <div class="form-container">
+    <h4>Add/Update Security</h4>
+    <form id="securityForm">
+      <div class="form-group">
+        <label for="accountId">Account ID</label>
+        <select id="accountId" name="accountId" required>
+          <option value="">Select Account</option>
+          <% if (typeof investmentAccounts !== 'undefined' && investmentAccounts.length > 0) { %>
+            <% investmentAccounts.forEach(function(account) { %>
+              <option value="<%= account.account_id %>"><%= account.account_id %> - Investment Account</option>
+            <% }) %>
+          <% } %>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="securityId">Security ID (Leave blank for new)</label>
+        <input type="number" id="securityId" name="securityId">
+      </div>
+      <div class="form-group">
+        <label for="securityType">Security Type</label>
+        <select id="securityType" name="securityType" required>
+          <option value="stock">Stock</option>
+          <option value="bond">Bond</option>
+          <option value="mutual fund">Mutual Fund</option>
+          <option value="ETF">ETF</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="purchasePrice">Purchase Price</label>
+        <input type="number" id="purchasePrice" name="purchasePrice" step="0.01" min="0.01" required>
+      </div>
+      <div class="form-group">
+        <label for="purchaseType">Purchase Type</label>
+        <input type="text" id="purchaseType" name="purchaseType">
+      </div>
+      <div class="form-group">
+        <label for="quantity">Quantity</label>
+        <input type="number" id="quantity" name="quantity" min="1" required>
+      </div>
+      <button type="submit" class="btn">Save Security</button>
+    </form>
+  </div>
+
+  <!-- Security Records Table -->
+  <h4>Your Securities</h4>
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Account_ID</th>
+        <th>Security_Id</th>
+        <th>Security_type</th>
+        <th>Purchase_price</th>
+        <th>Purchase_type</th>
+        <th>Quantity</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (typeof securities !== 'undefined' && securities.length > 0) { %>
+        <% securities.forEach(function(security) { %>
+          <tr>
+            <td><%= security.account_id %></td>
+            <td><%= security.security_id %></td>
+            <td><%= security.security_type %></td>
+            <td>$<%= parseFloat(security.purchase_price).toFixed(2) %></td>
+            <td><%= security.purchase_type || 'N/A' %></td>
+            <td><%= security.quantity %></td>
+            <td>
+              <button class="btn-small edit-btn" 
+                data-id="<%= security.security_id %>" 
+                data-account="<%= security.account_id %>"
+                data-type="<%= security.security_type %>"
+                data-price="<%= security.purchase_price %>"
+                data-purchase-type="<%= security.purchase_type || '' %>"
+                data-quantity="<%= security.quantity %>">
+                Edit
+              </button>
+            </td>
+          </tr>
+        <% }) %>
+      <% } else { %>
+        <tr>
+          <td colspan="7" style="text-align: center;">No records found.</td>
+        </tr>
+      <% } %>
+    </tbody>
+  </table>
+</div>
+
+<%- include("partials/footer.ejs") %>
+
+<script>
+  // Edit button click handler
+  document.querySelectorAll('.edit-btn').forEach(button => {
+    button.addEventListener('click', function() {
+      const securityId = this.getAttribute('data-id');
+      const accountId = this.getAttribute('data-account');
+      const securityType = this.getAttribute('data-type');
+      const purchasePrice = this.getAttribute('data-price');
+      const purchaseType = this.getAttribute('data-purchase-type');
+      const quantity = this.getAttribute('data-quantity');
+      
+      // Fill the form with security data
+      document.getElementById('securityId').value = securityId;
+      document.getElementById('accountId').value = accountId;
+      document.getElementById('securityType').value = securityType;
+      document.getElementById('purchasePrice').value = purchasePrice;
+      document.getElementById('purchaseType').value = purchaseType;
+      document.getElementById('quantity').value = quantity;
+      
+      // Scroll to the form
+      document.querySelector('.form-container').scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+
+  // Form submission handler
+  document.getElementById('securityForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const formData = {
+      securityId: document.getElementById('securityId').value || null,
+      accountId: document.getElementById('accountId').value,
+      securityType: document.getElementById('securityType').value,
+      purchasePrice: document.getElementById('purchasePrice').value,
+      purchaseType: document.getElementById('purchaseType').value,
+      quantity: document.getElementById('quantity').value
+    };
+    
+    try {
+      const response = await fetch('/api/securities', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      });
+      
+      const result = await response.json();
+      
+      if (result.success) {
+        alert('Security saved successfully!');
+        window.location.reload();
+      } else {
+        alert('Error saving security: ' + result.error);
+      }
+    } catch (err) {
+      alert('Error submitting form: ' + err);
+    }
+  });
+</script>

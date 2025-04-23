@@ -1,0 +1,30 @@
+{
+  "name": "bankingsystem",
+  "version": "1.0.0",
+  "description": "A project build for Banking System App in CS431",
+  "main": "main.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NguyenJohn12/BankingSystem.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/NguyenJohn12/BankingSystem/issues"
+  },
+  "homepage": "https://github.com/NguyenJohn12/BankingSystem#readme",
+  "dependencies": {
+    "body-parser": "^2.2.0",
+    "cookie-parser": "^1.4.7",
+    "db": "^6.0.3",
+    "dotenv": "^16.5.0",
+    "ejs": "^3.1.10",
+    "express": "^5.1.0",
+    "pg": "^8.14.1"
+  }
+}

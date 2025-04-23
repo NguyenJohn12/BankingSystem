@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Banking System - Login</title>
+  <link rel="stylesheet" href="/styles/style.css">
+</head>
+
+<body>
+  <header>
+    <h2>CSUEB Bank</h2>
+  </header>
+
+  <div class="login-container">
+    <div class="login-box">
+      <h2>Login to Your Account</h2>
+      <% if (error) { %>
+        <script>
+          alert("<%= error %>");
+        </script>
+        <% } %>
+          <form action="/login-account" method="POST">
+            <div class="form-group">
+              <label for="username">Username / Email</label>
+              <input type="text" id="username" name="username" placeholder="Enter your username or email" required>
+            </div>
+            <div class="form-group">
+              <label for="password">Password</label>
+              <input type="password" id="password" name="password" placeholder="Enter your password" required>
+            </div>
+            <button type="submit" class="btn">Login</button>
+            <a class="btn" href="/register" role="button">Register</a>
+          </form>
+    </div>
+  </div>
+  <%- include("partials/footer.ejs") %>

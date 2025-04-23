@@ -1,0 +1,193 @@
+<%- include("partials/header.ejs") %>
+
+<div class="content">
+  <h3>Transaction Records</h3>
+  
+  <% if (typeof error !== 'undefined' && error) { %>
+    <div class="error-message"><%= error %></div>
+  <% } %>
+
+  <!-- Main Transaction Table -->
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Transaction_ID</th>
+        <th>Account_ID</th>
+        <th>Transaction_type</th>
+        <th>Total</th>
+        <th>Description</th>
+        <th>Status</th>
+        <th>Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (typeof transactions !== 'undefined' && transactions.length > 0) { %>
+        <% transactions.forEach(function(transaction) { %>
+          <tr>
+            <td><%= transaction.transaction_id %></td>
+            <td><%= transaction.account_id %></td>
+            <td><%= transaction.transaction_type %></td>
+            <td>$<%= parseFloat(transaction.total).toFixed(2) %></td>
+            <td><%= transaction.description || 'N/A' %></td>
+            <td><%= transaction.status %></td>
+            <td><%= transaction.transaction_date ? new Date(transaction.transaction_date).toLocaleString() : 'N/A' %></td>
+          </tr>
+        <% }) %>
+      <% } else { %>
+        <tr>
+          <td colspan="7" style="text-align: center;">No records found.</td>
+        </tr>
+      <% } %>
+    </tbody>
+  </table>
+
+  <!-- Check Transactions -->
+  <h4>Check Transactions</h4>
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Transaction_ID</th>
+        <th>Check_number</th>
+        <th>Check_date</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (typeof checkTransactions !== 'undefined' && checkTransactions.length > 0) { %>
+        <% checkTransactions.forEach(function(check) { %>
+          <tr>
+            <td><%= check.transaction_id %></td>
+            <td><%= check.check_number %></td>
+            <td><%= check.check_date ? new Date(check.check_date).toLocaleDateString() : 'N/A' %></td>
+          </tr>
+        <% }) %>
+      <% } else { %>
+        <tr>
+          <td colspan="3" style="text-align: center;">No records found.</td>
+        </tr>
+      <% } %>
+    </tbody>
+  </table>
+
+  <!-- Withdrawal Transactions -->
+  <h4>Withdrawal Transactions</h4>
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Transaction_ID</th>
+        <th>Withdrawal_way</th>
+        <th>Withdrawal_location</th>
+        <th>ATM_code</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (typeof withdrawalTransactions !== 'undefined' && withdrawalTransactions.length > 0) { %>
+        <% withdrawalTransactions.forEach(function(withdrawal) { %>
+          <tr>
+            <td><%= withdrawal.transaction_id %></td>
+            <td><%= withdrawal.withdrawal_way %></td>
+            <td><%= withdrawal.withdrawal_location || 'N/A' %></td>
+            <td><%= withdrawal.atm_code || 'N/A' %></td>
+          </tr>
+        <% }) %>
+      <% } else { %>
+        <tr>
+          <td colspan="4" style="text-align: center;">No records found.</td>
+        </tr>
+      <% } %>
+    </tbody>
+  </table>
+
+  <!-- Deposit Transactions -->
+  <h4>Deposit Transactions</h4>
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Transaction_ID</th>
+        <th>Deposit_way</th>
+        <th>Deposit_location</th>
+        <th>Sender_place</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (typeof depositTransactions !== 'undefined' && depositTransactions.length > 0) { %>
+        <% depositTransactions.forEach(function(deposit) { %>
+          <tr>
+            <td><%= deposit.transaction_id %></td>
+            <td><%= deposit.deposit_way %></td>
+            <td><%= deposit.deposit_location || 'N/A' %></td>
+            <td><%= deposit.sender_place || 'N/A' %></td>
+          </tr>
+        <% }) %>
+      <% } else { %>
+        <tr>
+          <td colspan="4" style="text-align: center;">No records found.</td>
+        </tr>
+      <% } %>
+    </tbody>
+  </table>
+
+  <!-- Transaction Details -->
+  <h4>Transaction Details</h4>
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Transaction_ID</th>
+        <th>Detail_ID</th>
+        <th>Detail_type</th>
+        <th>Detail_value</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (typeof transactionDetails !== 'undefined' && transactionDetails.length > 0) { %>
+        <% transactionDetails.forEach(function(detail) { %>
+          <tr>
+            <td><%= detail.transaction_id %></td>
+            <td><%= detail.detail_id %></td>
+            <td><%= detail.detail_type || 'N/A' %></td>
+            <td><%= detail.detail_value || 'N/A' %></td>
+          </tr>
+        <% }) %>
+      <% } else { %>
+        <tr>
+          <td colspan="4" style="text-align: center;">No records found.</td>
+        </tr>
+      <% } %>
+    </tbody>
+  </table>
+</div>
+
+<%- include("partials/footer.ejs") %>
+
+<script>
+  document.getElementById('transactionForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const formData = {
+      accountId: document.getElementById('accountId').value,
+      transactionType: document.getElementById('transactionType').value,
+      amount: document.getElementById('amount').value,
+      description: document.getElementById('description').value
+    };
+    
+    try {
+      const response = await fetch('/api/transactions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      });
+      
+      const result = await response.json();
+      
+      if (result.success) {
+        alert('Transaction created successfully!');
+        window.location.reload();
+      } else {
+        alert('Error creating transaction: ' + result.error);
+      }
+    } catch (err) {
+      alert('Error submitting form: ' + err);
+    }
+  });
+</script>
