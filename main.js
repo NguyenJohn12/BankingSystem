@@ -36,7 +36,7 @@ app.get("/login", (req, res) => {
   res.render("login-page.ejs", { error: null });
 });
 
-// POST route — handle login
+/// POST route login
 app.post("/login-account", async (req, res) => {
   const email = req.body.username;
   const password = req.body.password;
@@ -53,12 +53,12 @@ app.post("/login-account", async (req, res) => {
         if (customerResult.rows.length > 0) {
           const customer = customerResult.rows[0];
 
-          // Store customer info in cookies
+          /// Store customer info in cookies
           res.cookie('customerId', customer.customer_id, { maxAge: 3600000, httpOnly: true });
           res.cookie('userEmail', email, { maxAge: 3600000, httpOnly: true });
           res.cookie('userName', `${customer.fname} ${customer.lname}`, { maxAge: 3600000, httpOnly: true });
 
-          // Login successful
+          /// Login successful
           res.redirect("/main");
         }
       } else {
@@ -77,6 +77,7 @@ app.get("/register", (req, res) => {
   res.render("register-page.ejs", { error: null });
 });
 
+/// POST route register
 app.post("/register-account", async (req, res) => {
   const email = req.body.username;
   const password = req.body.password;
@@ -93,7 +94,7 @@ app.post("/register-account", async (req, res) => {
     } else {
       await db.query("BEGIN");
 
-      // Insert customer record in table
+      /// Insert customer record in table
       const customerResult = await db.query(
         "INSERT INTO customer (fname, lname, email) VALUES ($1, $2, $3) RETURNING customer_id",
         [fname, lname, email]
@@ -101,13 +102,13 @@ app.post("/register-account", async (req, res) => {
 
       const customerId = customerResult.rows[0].customer_id;
 
-      // Insert login email and password
+      /// Insert login email and password
       await db.query(
         "INSERT INTO account_login (email, password) VALUES ($1, $2)",
         [email, password]
       );
 
-      // Commit transaction
+      /// Commit transaction
       await db.query("COMMIT");
 
       // Store customer info in cookies
@@ -132,25 +133,25 @@ const authenticateUser = (req, res, next) => {
   next();
 };
 
-// Add routes for all the other pages
+/// Add routes for all the other pages
 app.get("/main", authenticateUser, async (req, res) => {
   const customerId = req.cookies.customerId;
   const userName = req.cookies.userName;
 
   try {
-    // Get customer details
+    /// Get customer details
     const customerResult = await db.query(
       "SELECT * FROM customer WHERE customer_id = $1",
       [customerId]
     );
 
-    // Get customer accounts
+    /// Get customer accounts
     const accountsResult = await db.query(
       "SELECT * FROM account WHERE customer_id = $1",
       [customerId]
     );
 
-    // Get recent transactions (from all accounts owned by this customer)
+    /// Get recent transactions (from all accounts owned by this customer)
     const accountIds = accountsResult.rows.map(account => account.account_id);
 
     let transactionsResult = { rows: [] };
@@ -208,7 +209,7 @@ app.post("/update-customer", authenticateUser, async (req, res) => {
   const customerId = req.cookies.customerId;
   
   try {
-    // Security check: Only allow users to update their own information
+    /// Security check: Only allow users to update their own information
     if (parseInt(customer_id) !== parseInt(customerId)) {
       return res.render("customers.ejs", {
         pageTitle: 'Customer Information',
@@ -218,10 +219,10 @@ app.post("/update-customer", authenticateUser, async (req, res) => {
       });
     }
     
-    // Start a transaction to ensure both updates succeed or fail together
+    /// Start a transaction to ensure both updates succeed or fail together
     await db.query("BEGIN");
     
-    // First, get the current email for the customer
+    /// First, get the current email for the customer
     const currentEmailResult = await db.query(
       "SELECT email FROM customer WHERE customer_id = $1",
       [customer_id]
@@ -233,35 +234,35 @@ app.post("/update-customer", authenticateUser, async (req, res) => {
     
     const currentEmail = currentEmailResult.rows[0].email;
     
-    // Update the customer table
+    /// Update the customer table
     await db.query(
       "UPDATE customer SET address = $1, phone = $2, email = $3 WHERE customer_id = $4",
       [address, phone, email, customer_id]
     );
     
-    // If email changed, update it in the account_login table
+    /// If email changed, update it in the account_login table
     if (email !== currentEmail) {
       const updateLoginResult = await db.query(
         "UPDATE account_login SET email = $1 WHERE email = $2",
         [email, currentEmail]
       );
       
-      // Check if the account_login update affected any rows
+      /// Check if the account_login update affected any rows
       if (updateLoginResult.rowCount === 0) {
         throw new Error("Failed to update login email");
       }
       
-      // Update the userEmail cookie if email was changed
+      /// Update the userEmail cookie if email was changed
       res.cookie('userEmail', email, { maxAge: 3600000, httpOnly: true });
     }
     
-    // Commit the transaction
+    /// Commit the transaction
     await db.query("COMMIT");
     
-    // Fetch the updated customer data
+    /// Fetch the updated customer data
     const result = await db.query("SELECT * FROM customer WHERE customer_id = $1", [customerId]);
     
-    // Render the page with success message
+    /// Render the page with success message
     res.render("customers.ejs", {
       pageTitle: 'Customer Information',
       customers: result.rows,
@@ -269,12 +270,12 @@ app.post("/update-customer", authenticateUser, async (req, res) => {
       success: "Customer information updated successfully!"
     });
   } catch (err) {
-    // Rollback the transaction on error
+    /// Rollback the transaction on error
     await db.query("ROLLBACK");
     
     console.error("Error updating customer: ", err);
     
-    // Fetch the customer data again to display
+    /// Fetch the customer data again to display
     const result = await db.query("SELECT * FROM customer WHERE customer_id = $1", [customerId]);
     
     res.render("customers.ejs", {
@@ -286,22 +287,22 @@ app.post("/update-customer", authenticateUser, async (req, res) => {
   }
 });
 
-// Modified accounts route
+/// Modified accounts route
 app.get("/accounts", authenticateUser, async (req, res) => {
   const customerId = req.cookies.customerId;
   try {
-    // Get accounts for this customer only
+    /// Get accounts for this customer only
     const accountsResult = await db.query("SELECT * FROM account WHERE customer_id = $1", [customerId]);
 
-    // Get account IDs for this customer
+    /// Get account IDs for this customer
     const accountIds = accountsResult.rows.map(account => account.account_id);
 
-    // Initialize empty arrays for related accounts
+    /// Initialize empty arrays for related accounts
     let creditAccounts = [];
     let debitAccounts = [];
     let investmentAccounts = [];
 
-    // Only query specific account types if the customer has accounts
+    /// Only query specific account types if the customer has accounts
     if (accountIds.length > 0) {
       // Get credit accounts for this customer
       const creditResult = await db.query(
@@ -312,7 +313,7 @@ app.get("/accounts", authenticateUser, async (req, res) => {
       );
       creditAccounts = creditResult.rows;
     
-      // Get debit accounts for this customer
+      /// Get debit accounts for this customer
       const debitResult = await db.query(
         "SELECT d.*, a.account_type FROM debit_account d " +
         "JOIN account a ON d.account_id = a.account_id " +
@@ -321,7 +322,7 @@ app.get("/accounts", authenticateUser, async (req, res) => {
       );
       debitAccounts = debitResult.rows;
     
-      // Get investment accounts for this customer
+      /// Get investment accounts for this customer
       const investmentResult = await db.query(
         "SELECT i.*, a.account_type FROM investment_account i " +
         "JOIN account a ON i.account_id = a.account_id " +
@@ -353,11 +354,11 @@ app.get("/accounts", authenticateUser, async (req, res) => {
   }
 });
 
-// Modified transactions route
+/// Modified transactions route
 app.get("/transactions", authenticateUser, async (req, res) => {
   const customerId = req.cookies.customerId;
   try {
-    // Get customer's account IDs first
+    /// Get customer's account IDs first
     const accountsResult = await db.query(
       "SELECT account_id FROM account WHERE customer_id = $1",
       [customerId]
@@ -365,7 +366,7 @@ app.get("/transactions", authenticateUser, async (req, res) => {
 
     const accountIds = accountsResult.rows.map(account => account.account_id);
 
-    // Initialize all results as empty arrays
+    /// Initialize all results as empty arrays
     let transactions = [];
     let checkTransactions = [];
     let withdrawalTransactions = [];
@@ -374,7 +375,7 @@ app.get("/transactions", authenticateUser, async (req, res) => {
 
     // Only query transactions if customer has accounts
     if (accountIds.length > 0) {
-      // Get transactions for customer's accounts only
+      /// Get transactions for customer's accounts only
       transactions = (await db.query(
         `SELECT * FROM transaction 
          WHERE account_id = ANY($1::int[]) 
@@ -382,11 +383,11 @@ app.get("/transactions", authenticateUser, async (req, res) => {
         [accountIds]
       )).rows;
 
-      // Get transaction IDs
+      /// Get transaction IDs
       const transactionIds = transactions.map(transaction => transaction.transaction_id);
 
       if (transactionIds.length > 0) {
-        // Get related transaction subtypes
+        /// Get related transaction subtypes
         checkTransactions = (await db.query(
           `SELECT * FROM check_transaction 
            WHERE transaction_id = ANY($1::int[])`,
@@ -440,7 +441,7 @@ app.get("/transactions", authenticateUser, async (req, res) => {
 app.get("/securities", authenticateUser, async (req, res) => {
   const customerId = req.cookies.customerId;
   try {
-    // Get customer's investment account IDs first
+    /// Get customer's investment account IDs first
     const accountsResult = await db.query(
       "SELECT account_id FROM account WHERE customer_id = $1 AND account_type = 'investment'",
       [customerId]
@@ -448,19 +449,19 @@ app.get("/securities", authenticateUser, async (req, res) => {
 
     const accountIds = accountsResult.rows.map(account => account.account_id);
 
-    // Get securities for this customer's accounts only
+    /// Get securities for this customer's accounts only
     let securities = [];
     let investmentAccounts = [];
     
     if (accountIds.length > 0) {
-      // Get securities
+      /// Get securities
       const securitiesResult = await db.query(
         "SELECT * FROM security WHERE account_id = ANY($1::int[])",
         [accountIds]
       );
       securities = securitiesResult.rows;
       
-      // Get investment account details for the form dropdown
+      /// Get investment account details for the form dropdown
       const investmentAccountsResult = await db.query(
         "SELECT * FROM account WHERE account_id = ANY($1::int[]) AND account_type = 'investment'",
         [accountIds]
@@ -487,16 +488,16 @@ app.get("/securities", authenticateUser, async (req, res) => {
   }
 });
 
-// API endpoint to handle security updates and additions
+/// API endpoint to handle security updates and additions
 app.post("/api/securities", authenticateUser, async (req, res) => {
   const { securityId, accountId, securityType, purchasePrice, purchaseType, quantity } = req.body;
   const customerId = req.cookies.customerId;
 
   try {
-    // Start transaction
+    /// Start transaction
     await db.query("BEGIN");
 
-    // Verify the account belongs to the authenticated user and is an investment account
+    /// Verify the account belongs to the authenticated user and is an investment account
     const accountResult = await db.query(
       "SELECT * FROM account WHERE account_id = $1 AND customer_id = $2 AND account_type = 'investment'",
       [accountId, customerId]
@@ -510,7 +511,7 @@ app.post("/api/securities", authenticateUser, async (req, res) => {
       });
     }
 
-    // Validate inputs
+    /// Validate inputs
     if (!securityType || !purchasePrice || !quantity || purchasePrice <= 0 || quantity <= 0) {
       await db.query("ROLLBACK");
       return res.status(400).json({
@@ -521,9 +522,9 @@ app.post("/api/securities", authenticateUser, async (req, res) => {
 
     let result;
     
-    // If securityId is provided, update existing security
+    /// If securityId is provided, update existing security
     if (securityId) {
-      // First verify the security belongs to one of the user's accounts
+      /// First verify the security belongs to one of the user's accounts
       const securityCheck = await db.query(
         `SELECT s.* FROM security s
          JOIN account a ON s.account_id = a.account_id
@@ -539,7 +540,7 @@ app.post("/api/securities", authenticateUser, async (req, res) => {
         });
       }
       
-      // Update the security
+      /// Update the security
       result = await db.query(
         `UPDATE security
          SET account_id = $1, security_type = $2, purchase_price = $3, 
@@ -549,7 +550,7 @@ app.post("/api/securities", authenticateUser, async (req, res) => {
         [accountId, securityType, purchasePrice, purchaseType, quantity, securityId]
       );
     } else {
-      // Insert new security
+      /// Insert new security
       result = await db.query(
         `INSERT INTO security
          (account_id, security_type, purchase_price, purchase_type, quantity)
@@ -576,12 +577,12 @@ app.post("/api/securities", authenticateUser, async (req, res) => {
   }
 });
 
-// API endpoint to add new customer relationships
+/// API endpoint to add new customer relationships
 app.post("/api/relationships", authenticateUser, async (req, res) => {
   const { relationshipType, balanceAmount } = req.body;
   const customerId = req.cookies.customerId;
 
-  // Validate the input
+  /// Validate the input
   if (!relationshipType) {
     return res.status(400).json({
       success: false,
@@ -590,10 +591,10 @@ app.post("/api/relationships", authenticateUser, async (req, res) => {
   }
 
   try {
-    // Start transaction
+    /// Start transaction
     await db.query("BEGIN");
 
-    // Insert new relationship
+    /// Insert new relationship
     const result = await db.query(
       `INSERT INTO customer_relationship
        (customer_id, relationship_type, balance_amount, balance_date)
@@ -619,7 +620,7 @@ app.post("/api/relationships", authenticateUser, async (req, res) => {
   }
 });
 
-// Update the relationships route to include success message
+/// Update the relationships route to include success message
 app.get("/relationships", authenticateUser, async (req, res) => {
   const customerId = req.cookies.customerId;
   try {
@@ -643,11 +644,12 @@ app.get("/relationships", authenticateUser, async (req, res) => {
     });
   }
 });
-// Modified history route
+
+/// Modified history route
 app.get("/history", authenticateUser, async (req, res) => {
   const customerId = req.cookies.customerId;
   try {
-    // Get customer's account IDs first
+    /// Get customer's account IDs first
     const accountsResult = await db.query(
       "SELECT account_id FROM account WHERE customer_id = $1",
       [customerId]
@@ -655,12 +657,12 @@ app.get("/history", authenticateUser, async (req, res) => {
 
     const accountIds = accountsResult.rows.map(account => account.account_id);
 
-    // Initialize empty arrays
+    /// Initialize empty arrays
     let transactionHistory = [];
     let balanceHistory = [];
 
     if (accountIds.length > 0) {
-      // Get transaction history for customer's accounts only
+      /// Get transaction history for customer's accounts only
       transactionHistory = (await db.query(
         `SELECT * FROM transaction_history 
          WHERE account_id = ANY($1::int[]) 
@@ -668,7 +670,7 @@ app.get("/history", authenticateUser, async (req, res) => {
         [accountIds]
       )).rows;
 
-      // Get balance history for customer's accounts only
+      /// Get balance history for customer's accounts only
       balanceHistory = (await db.query(
         `SELECT * FROM account_balance_history 
          WHERE account_id = ANY($1::int[]) 
@@ -714,20 +716,11 @@ app.post("/api/transactions", authenticateUser, async (req, res) => {
     });
   }
 
-  // Validate transaction type
-  // const validTypes = ['deposit', 'withdrawal', 'transfer', 'payment', 'check'];
-  // if (!validTypes.includes(transactionType)) {
-  //   return res.status(400).json({
-  //     success: false,
-  //     error: `Invalid transaction type. Must be one of: ${validTypes.join(', ')}`
-  //   });
-  // }
-
   try {
-    // Start transaction
+    /// Start transaction
     await db.query("BEGIN");
 
-    // Verify the account belongs to the authenticated user
+    /// Verify the account belongs to the authenticated user
     const accountResult = await db.query(
       "SELECT * FROM account WHERE account_id = $1 AND customer_id = $2",
       [accountId, req.cookies.customerId]
@@ -741,44 +734,6 @@ app.post("/api/transactions", authenticateUser, async (req, res) => {
       });
     }
 
-    // const currentBalance = parseFloat(accountResult.rows[0].balance);
-    // let newBalance = currentBalance;
-
-    // // Parse amount as float to ensure proper calculation
-    // const parsedAmount = parseFloat(amount);
-
-    // if (isNaN(parsedAmount) || parsedAmount <= 0) {
-    //   await db.query("ROLLBACK");
-    //   return res.status(400).json({
-    //     success: false,
-    //     error: "Amount must be a positive number"
-    //   });
-    // }
-
-    /// Update account balance based on transaction type
-    // if (transactionType === 'deposit') {
-    //   newBalance = currentBalance + parsedAmount;
-    // } else if (transactionType === 'withdrawal' || transactionType === 'payment' || transactionType === 'check') {
-    //   // Check sufficient funds for withdrawals
-    //   if (parsedAmount > currentBalance) {
-    //     await db.query("ROLLBACK");
-    //     return res.status(400).json({
-    //       success: false,
-    //       error: "Insufficient funds for withdrawal"
-    //     });
-    //   }
-    //   newBalance = currentBalance - parsedAmount;
-    // } else if (transactionType === 'transfer') {
-    //   if (parsedAmount > currentBalance) {
-    //     await db.query("ROLLBACK");
-    //     return res.status(400).json({
-    //       success: false,
-    //       error: "Insufficient funds for transfer"
-    //     });
-    //   }
-    //   newBalance = currentBalance - parsedAmount;
-    // }
-
     /// Insert transaction record - Let the database generate the transaction_id
     /// Make sure we're not trying to provide the transaction_id ourselves
     const transactionResult = await db.query(
@@ -790,34 +745,6 @@ app.post("/api/transactions", authenticateUser, async (req, res) => {
     );
 
     const transactionId = transactionResult.rows[0].transaction_id;
-
-    /// Insert specific transaction details based on type
-    // if (transactionType === 'check') {
-    //   /// For check transactions, generate a mock check number
-    //   const checkNumber = Math.floor(1000000 + Math.random() * 9000000);
-    //   await db.query(
-    //     `INSERT INTO check_transaction
-    //      (transaction_id, check_number, check_date)
-    //      VALUES ($1, $2)`,
-    //     [transactionId, checkNumber]
-    //   );
-    // } else if (transactionType === 'withdrawal') {
-    //   /// For withdrawal transactions
-    //   await db.query(
-    //     `INSERT INTO withdrawal_transaction
-    //      (transaction_id, withdrawal_way, withdrawal_location)
-    //      VALUES ($1, 'online', 'web application')`,
-    //     [transactionId]
-    //   );
-    // } else if (transactionType === 'deposit') {
-    //   /// For deposit transactions
-    //   await db.query(
-    //     `INSERT INTO deposit_transaction
-    //      (transaction_id, deposit_way, deposit_location)
-    //      VALUES ($1, 'online', 'web application')`,
-    //     [transactionId]
-    //   );
-    // }
 
     /// Update account balance when the customer pay
     await db.query(
