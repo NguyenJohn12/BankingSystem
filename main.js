@@ -4,11 +4,11 @@ import pg from "pg";
 import env from "dotenv";
 import cookieParser from "cookie-parser";
 
+const app = express();
+const port =  3000;
 
 /// Set up environment variable
 env.config();
-const app = express();
-const port = process.env.LOCAL_PORT;
 
 /// Use postgres for database
 const db = new pg.Client({
