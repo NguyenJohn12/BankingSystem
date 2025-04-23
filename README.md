@@ -85,7 +85,7 @@ The application uses a PostgreSQL database with the following key tables:
    npm install body-parser
 
 3. **Set up environment variables**
--  Create a .env file in the root directory with the following:
+    - Create a .env file in the root directory with the following:
 
     ```bash
     PG_USER=your_postgres_username
@@ -95,46 +95,46 @@ The application uses a PostgreSQL database with the following key tables:
     PG_PORT=5432
 
 4. **Set up PostgreSQL database**
-- Create a database named banking_system
-- Run the SQL scripts in the database folder to create tables and seed initial data
+    - Create a database named banking_system
+    - Run the SQL scripts in the database folder to create tables and seed initial data
 
 5. **Start the application**
     ```bash
     npm start
 
 6. **Access the application**
-- Open your browser and navigate to http://localhost:3000
+    - Open your browser and navigate to http://localhost:3000
 
 ## 📱 Usage 
 
 1. **Registration/Login**
 
-- New users can register with email, password, and basic information
-- Existing users can log in with email and password
+    - New users can register with email, password, and basic information
+    - Existing users can log in with email and password
 
 
 2. **Customer Management**
 
-- View and edit customer information
-- Update contact details (address, phone, email)
+    - View and edit customer information
+    - Update contact details (address, phone, email)
 
 
 3. **Account Management**
 
-- View all accounts associated with the customer
-- Check account balances and transaction history
+    - View all accounts associated with the customer
+    - Check account balances and transaction history
 
 
 4. **Transactions**
 
-- View transaction history
-- Track account balance changes
+    - View transaction history
+    - Track account balance changes
 
 
 5. **Investment Portfolio**
 
-- View investment accounts and securities
-- Track investment performance
+    - View investment accounts and securities
+    - Track investment performance
 
 ## 🚓 Security Features
 - Secure cookie-based authentication
