@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <%- include("partials/header.ejs") %>
 
 <div class="content">
@@ -191,3 +192,107 @@
     }
   });
 </script>
+=======
+  <%- include("partials/header.ejs") %>
+
+  <div class="content">
+    <h3>Transaction Records</h3>
+    <!-- Main Transaction Table -->
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Transaction_ID</th>
+          <th>Account_ID</th>
+          <th>Transaction_type</th>
+          <th>Total</th>
+          <th>Description</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td colspan="6" style="text-align: center;">No records found.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Check Transactions -->
+    <h4>Check Transactions</h4>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Transaction_ID</th>
+          <th>Check_number</th>
+          <th>Check_date</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td colspan="3" style="text-align: center;">No records found.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Withdrawal Transactions -->
+    <h4>Withdrawal Transactions</h4>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Transaction_ID</th>
+          <th>Withdrawal_way</th>
+          <th>Withdrawal_location</th>
+          <th>ATM_code</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td colspan="4" style="text-align: center;">No records found.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Deposit Transactions -->
+    <h4>Deposit Transactions</h4>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Transaction_ID</th>
+          <th>Deposit_way</th>
+          <th>Deposit_location</th>
+          <th>Sender_place</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td colspan="4" style="text-align: center;">No records found.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Transaction Details -->
+    <h4>Transaction Details</h4>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Transaction_ID</th>
+          <th>Detail_ID</th>
+          <th>Detail_type</th>
+          <th>Detail_value</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td colspan="4" style="text-align: center;">No records found.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 CSUEB Bank. All rights reserved.</p>
+  </footer>
+
+  <script src="main.js"></script>
+</body>
+</html>
+>>>>>>> refs/remotes/origin/main
