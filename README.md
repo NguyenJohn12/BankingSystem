@@ -71,8 +71,8 @@ The application uses a PostgreSQL database with the following key tables:
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/banking-system.git
-   cd banking-system
+   git clone https://github.com/NguyenJohn12/BankingSystem
+   cd BankingSystem
 
 2. **Install dependencies**
    ```bash
