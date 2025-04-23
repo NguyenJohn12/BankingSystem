@@ -8,6 +8,7 @@
   <% } %>
 
   <!-- Main Account Table -->
+  <h4>Total Accounts</h4>
   <table class="data-table">
     <thead>
       <tr>
@@ -51,6 +52,7 @@
     <thead>
       <tr>
         <th>Account_ID</th>
+        <th>Account_type</th>
         <th>Credit_limit</th>
         <th>Due_date</th>
         <th>Payment_percent</th>
@@ -61,6 +63,7 @@
         <% creditAccounts.forEach(function(creditAccount) { %>
           <tr>
             <td><%= creditAccount.account_id %></td>
+            <td><%= creditAccount.account_type %></td>
             <td>$<%= parseFloat(creditAccount.credit_limit).toFixed(2) %></td>
             <td><%= creditAccount.due_date ? new Date(creditAccount.due_date).toLocaleDateString() : 'N/A' %></td>
             <td><%= parseFloat(creditAccount.payment_percent).toFixed(2) %>%</td>
@@ -80,6 +83,7 @@
     <thead>
       <tr>
         <th>Account_ID</th>
+        <th>Account_type</th>
         <th>Daily_withdrawal_limit</th>
       </tr>
     </thead>
@@ -88,6 +92,7 @@
         <% debitAccounts.forEach(function(debitAccount) { %>
           <tr>
             <td><%= debitAccount.account_id %></td>
+            <td><%= debitAccount.account_type %></td>
             <td>$<%= parseFloat(debitAccount.daily_withdrawal_limit).toFixed(2) %></td>
           </tr>
         <% }) %>
@@ -105,6 +110,7 @@
     <thead>
       <tr>
         <th>Account_ID</th>
+        <th>Account_type</th>
         <th>risk_level</th>
         <th>Strategy</th>
         <th>Percent_return</th>
@@ -115,6 +121,7 @@
         <% investmentAccounts.forEach(function(investmentAccount) { %>
           <tr>
             <td><%= investmentAccount.account_id %></td>
+            <td><%= investmentAccount.account_type %></td>
             <td><%= investmentAccount.risk_level %></td>
             <td><%= investmentAccount.strategy || 'N/A' %></td>
             <td><%= investmentAccount.percent_return ? parseFloat(investmentAccount.percent_return).toFixed(2) + '%' : 'N/A' %></td>

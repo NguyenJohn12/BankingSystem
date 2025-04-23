@@ -157,37 +157,3 @@
 </div>
 
 <%- include("partials/footer.ejs") %>
-
-<script>
-  document.getElementById('transactionForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    
-    const formData = {
-      accountId: document.getElementById('accountId').value,
-      transactionType: document.getElementById('transactionType').value,
-      amount: document.getElementById('amount').value,
-      description: document.getElementById('description').value
-    };
-    
-    try {
-      const response = await fetch('/api/transactions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formData)
-      });
-      
-      const result = await response.json();
-      
-      if (result.success) {
-        alert('Transaction created successfully!');
-        window.location.reload();
-      } else {
-        alert('Error creating transaction: ' + result.error);
-      }
-    } catch (err) {
-      alert('Error submitting form: ' + err);
-    }
-  });
-</script>

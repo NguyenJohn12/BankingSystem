@@ -203,6 +203,88 @@ app.get("/customers", authenticateUser, async (req, res) => {
     });
   }
 });
+app.post("/update-customer", authenticateUser, async (req, res) => {
+  const { customer_id, address, phone, email } = req.body;
+  const customerId = req.cookies.customerId;
+  
+  try {
+    // Security check: Only allow users to update their own information
+    if (parseInt(customer_id) !== parseInt(customerId)) {
+      return res.render("customers.ejs", {
+        pageTitle: 'Customer Information',
+        error: "You can only update your own information",
+        customers: [],
+        userName: req.cookies.userName
+      });
+    }
+    
+    // Start a transaction to ensure both updates succeed or fail together
+    await db.query("BEGIN");
+    
+    // First, get the current email for the customer
+    const currentEmailResult = await db.query(
+      "SELECT email FROM customer WHERE customer_id = $1",
+      [customer_id]
+    );
+    
+    if (currentEmailResult.rows.length === 0) {
+      throw new Error("Customer not found");
+    }
+    
+    const currentEmail = currentEmailResult.rows[0].email;
+    
+    // Update the customer table
+    await db.query(
+      "UPDATE customer SET address = $1, phone = $2, email = $3 WHERE customer_id = $4",
+      [address, phone, email, customer_id]
+    );
+    
+    // If email changed, update it in the account_login table
+    if (email !== currentEmail) {
+      const updateLoginResult = await db.query(
+        "UPDATE account_login SET email = $1 WHERE email = $2",
+        [email, currentEmail]
+      );
+      
+      // Check if the account_login update affected any rows
+      if (updateLoginResult.rowCount === 0) {
+        throw new Error("Failed to update login email");
+      }
+      
+      // Update the userEmail cookie if email was changed
+      res.cookie('userEmail', email, { maxAge: 3600000, httpOnly: true });
+    }
+    
+    // Commit the transaction
+    await db.query("COMMIT");
+    
+    // Fetch the updated customer data
+    const result = await db.query("SELECT * FROM customer WHERE customer_id = $1", [customerId]);
+    
+    // Render the page with success message
+    res.render("customers.ejs", {
+      pageTitle: 'Customer Information',
+      customers: result.rows,
+      userName: req.cookies.userName,
+      success: "Customer information updated successfully!"
+    });
+  } catch (err) {
+    // Rollback the transaction on error
+    await db.query("ROLLBACK");
+    
+    console.error("Error updating customer: ", err);
+    
+    // Fetch the customer data again to display
+    const result = await db.query("SELECT * FROM customer WHERE customer_id = $1", [customerId]);
+    
+    res.render("customers.ejs", {
+      pageTitle: 'Customer Information',
+      customers: result.rows,
+      error: "Failed to update customer information: " + err.message,
+      userName: req.cookies.userName
+    });
+  }
+});
 
 // Modified accounts route
 app.get("/accounts", authenticateUser, async (req, res) => {
@@ -223,21 +305,27 @@ app.get("/accounts", authenticateUser, async (req, res) => {
     if (accountIds.length > 0) {
       // Get credit accounts for this customer
       const creditResult = await db.query(
-        "SELECT * FROM credit_account WHERE account_id = ANY($1::int[])",
+        "SELECT c.*, a.account_type FROM credit_account c " +
+        "JOIN account a ON c.account_id = a.account_id " +
+        "WHERE c.account_id = ANY($1::int[])",
         [accountIds]
       );
       creditAccounts = creditResult.rows;
-
+    
       // Get debit accounts for this customer
       const debitResult = await db.query(
-        "SELECT * FROM debit_account WHERE account_id = ANY($1::int[])",
+        "SELECT d.*, a.account_type FROM debit_account d " +
+        "JOIN account a ON d.account_id = a.account_id " +
+        "WHERE d.account_id = ANY($1::int[])",
         [accountIds]
       );
       debitAccounts = debitResult.rows;
-
+    
       // Get investment accounts for this customer
       const investmentResult = await db.query(
-        "SELECT * FROM investment_account WHERE account_id = ANY($1::int[])",
+        "SELECT i.*, a.account_type FROM investment_account i " +
+        "JOIN account a ON i.account_id = a.account_id " +
+        "WHERE i.account_id = ANY($1::int[])",
         [accountIds]
       );
       investmentAccounts = investmentResult.rows;
