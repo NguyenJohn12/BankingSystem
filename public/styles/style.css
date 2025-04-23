@@ -1,13 +1,9 @@
-<<<<<<< HEAD
 /* Global Styles */
-=======
 /* Reset & Basic Styles */
->>>>>>> refs/remotes/origin/main
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-<<<<<<< HEAD
   font-family: 'Arial', sans-serif;
 }
 
@@ -73,7 +69,6 @@ h3 {
 h4 {
   color: #0055aa;
   margin: 1.5rem 0 0.5rem;
-=======
 }
 
 body {
@@ -206,10 +201,8 @@ footer {
 .data-table {
   width: 100%;
   border-collapse: collapse;
-<<<<<<< HEAD
   margin-bottom: 2rem;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-=======
   margin-bottom: 30px;
   background-color: #fff;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
@@ -218,12 +211,11 @@ footer {
 .data-table thead {
   background: #0066cc;
   color: #fff;
->>>>>>> refs/remotes/origin/main
 }
 
 .data-table th,
 .data-table td {
-<<<<<<< HEAD
+
   padding: 0.75rem;
   border: 1px solid #ddd;
   text-align: left;
@@ -473,4 +465,3 @@ p {
     padding: 10px;
   }
 }
->>>>>>> refs/remotes/origin/main

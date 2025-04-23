@@ -20,10 +20,7 @@
   "homepage": "https://github.com/NguyenJohn12/BankingSystem#readme",
   "dependencies": {
     "body-parser": "^2.2.0",
-<<<<<<< HEAD
     "cookie-parser": "^1.4.7",
-=======
->>>>>>> refs/remotes/origin/main
     "db": "^6.0.3",
     "dotenv": "^16.5.0",
     "ejs": "^3.1.10",
