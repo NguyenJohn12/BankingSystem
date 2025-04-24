@@ -65,5 +65,37 @@
     </tbody>
   </table>
 </div>
-
+ 
+<script>
+  /// Relationship update function 
+document.getElementById('relationshipForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  
+  const formData = {
+    relationshipType: document.getElementById('relationshipType').value,
+    balanceAmount: document.getElementById('balanceAmount').value || 0
+  };
+  
+  try {
+    const response = await fetch('/api/relationships', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(formData)
+    });
+    
+    const result = await response.json();
+    
+    if (result.success) {
+      alert('Relationship created successfully!');
+      window.location.reload();
+    } else {
+      alert('Error creating relationship: ' + result.error);
+    }
+  } catch (err) {
+    alert('Error submitting form: ' + err);
+  }
+});
+</script>
 <%- include("partials/footer.ejs") %>

@@ -90,12 +90,12 @@ The application uses a PostgreSQL database with the following key tables:
     ```bash
     PG_USER=your_postgres_username
     PG_HOST=localhost
-    PG_DATABASE=banking_system
+    PG_DATABASE=BankingSystem
     PG_PASSWORD=your_postgres_password
     PG_PORT=5432
 
 4. **Set up PostgreSQL database**
-    - Create a database named banking_system
+    - Create a database named BankingSystem
     - Run the SQL scripts in the database folder to create tables and seed initial data
 
 5. **Start the application**

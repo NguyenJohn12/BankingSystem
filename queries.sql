@@ -136,7 +136,7 @@ CREATE TABLE security (
 
 -- Customer relationship table
 CREATE TABLE customer_relationship (
-    relationship_id INT PRIMARY KEY,
+    relationship_id INT PRIMARY KEY AUTO_INCREMENT,
     customer_id INT NOT NULL,
     balance_amount DECIMAL(15,2) NOT NULL,
     balance_date DATE NOT NULL,
@@ -245,12 +245,12 @@ INSERT INTO transaction_detail (transaction_id, detail_id, detail_type, detail_v
 INSERT INTO security (account_id, security_id, security_type, purchase_price, purchase_type, quantity) VALUES
 (4, 1, 'ETF', 150.25, 'buy', 100),
 (4, 2, 'stock', 75.50, 'buy', 200),
-(4, 3, 'bond', 1000.00, 'buy', 10);
+(4, 3, 'bond', 1000.00, 'buy', 10),
 (4, 4, 'ETF', 2000.00, 'sold', 100);
 
 -- Insert customer relationship data
 INSERT INTO customer_relationship (relationship_id, customer_id, balance_amount, balance_date, relationship_type) VALUES
-(1, 1, 60150.25, '2025-04-15','Father');
-(3,1,20000.00,'2025-04-23','Family')
-(4,1,12000.00,'2025-04-23','Financial Advisor')
-(5,1,123321.00,'2025-04-23','Business')
+(1, 1, 60150.25, '2025-04-15','Father'),
+(2,1,20000.00,'2025-04-23','Family'),
+(3,1,12000.00,'2025-04-23','Financial Advisor'),
+(4,1,123321.00,'2025-04-23','Business');
