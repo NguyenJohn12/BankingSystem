@@ -250,7 +250,7 @@ INSERT INTO security (account_id, security_id, security_type, purchase_price, pu
 
 -- Insert customer relationship data
 INSERT INTO customer_relationship (relationship_id, customer_id, balance_amount, balance_date, relationship_type) VALUES
-(1, 1, 60150.25, '2025-04-15', 'Father');
-(3	1	20000.00	"2025-04-23"	"Family")
-(4	1	12000.00	"2025-04-23"	"Financial Advisor")
-(5	1	123321.00	"2025-04-23"	"Business")
+(1, 1, 60150.25, '2025-04-15','Father');
+(3,1,20000.00,'2025-04-23','Family')
+(4,1,12000.00,'2025-04-23','Financial Advisor')
+(5,1,123321.00,'2025-04-23','Business')
