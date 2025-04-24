@@ -35,7 +35,13 @@
             <td><%= customer.phone || 'N/A' %></td>
             <td><%= customer.email %></td>
             <td><%= customer.birthdate ? new Date(customer.birthdate).toLocaleDateString() : 'N/A' %></td>
-            <td><button onclick="showEditModal(<%= JSON.stringify(customer) %>)" class="edit-btn">Change</button></td>
+            <td>
+              <button 
+              onclick='handleEditClick(this)' 
+              data-customer='<%= JSON.stringify(customer) %>' 
+                class="edit-btn"
+              >Change</button>
+            </td>
           </tr>
         <% }) %>
       <% } else { %>

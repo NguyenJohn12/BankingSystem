@@ -54,6 +54,11 @@ window.onclick = function(event) {
   }
 }
 
+/// Fix syntax of ejs and js in customers 
+function handleEditClick(button) {
+  const customer = JSON.parse(button.getAttribute('data-customer'));
+  showEditModal(customer);
+}
 /// Relationship update function 
 document.getElementById('relationshipForm').addEventListener('submit', async (e) => {
   e.preventDefault();
