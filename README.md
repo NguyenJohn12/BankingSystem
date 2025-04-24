@@ -1,6 +1,8 @@
 # 🏦 Banking System Application
 
-A comprehensive banking system web application developed for CS431. This project provides a secure and user-friendly interface for managing customer accounts, transactions, and financial relationships.
+Members: John Nguyen, Saiful Islam Badhon
+
+A comprehensive banking system web application developed for CS431. This project provides a secure and user-friendly interface for managing customer accounts, transactions, and financial relationship.
 
 ## ⛳️ Features
 
